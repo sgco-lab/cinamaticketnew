@@ -1,42 +1,19 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <title>فیلم‌های در حال اکران</title>
-    <style>
-        body {
-            font-family: sans-serif;
-            background: #f9f9f9;
-            padding: 20px;
-            direction: rtl;
-        }
-        .movie {
-            width: 300px;
-            border: 1px solid #ccc;
-            background: white;
-            margin: 10px;
-            padding: 10px;
-            border-radius: 10px;
-            display: inline-block;
-            vertical-align: top;
-        }
-        .movie img {
-            width: 100%;
-            border-radius: 8px;
-        }
-        .movie-title {
-            font-weight: bold;
-            font-size: 18px;
-            margin: 10px 0;
-        }
-        .movie-desc {
-            font-size: 14px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>فیلم‌های در حال اکران</title>
 </head>
 <body>
-    <h1>فیلم‌های در حال اکران</h1>
-    <p>آخرین بروزرسانی: {{UPDATED_AT}}</p>
-    <div>{{MOVIES}}</div>
+  <h1>فیلم‌های در حال اکران</h1>
+  <ul>
+    {% for movie in movies %}
+    <li>
+      <h3>{{ movie.title }}</h3>
+      <img src="{{ movie.image_url }}" alt="{{ movie.title }}" width="200">
+      <p>{{ movie.description }}</p>
+    </li>
+    {% endfor %}
+  </ul>
 </body>
 </html>
