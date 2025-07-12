@@ -1,48 +1,55 @@
-import requests
-from bs4 import BeautifulSoup
-from datetime import datetime
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from webdriver_manager.chrome import ChromeDriverManager
+from jinja2 import Environment, FileSystemLoader
+import time
 import os
 
-BASE_URL = "https://cinematicket.org/"
-HTML_PATH = "public/now_showing.html"
-os.makedirs("public", exist_ok=True)
-
 def fetch_movies():
-    response = requests.get(BASE_URL)
-    soup = BeautifulSoup(response.text, "html.parser")
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
+
+    driver = webdriver.Chrome(ChromeDriverManager().install(), options=options)
+    driver.get("https://www.cinematicket.org/")
+
+    time.sleep(10)  # صبر برای بارگذاری کامل JS
+
     movies = []
-    for card in soup.select(".movie-card, .movie-item"):
-        name = card.select_one(".movie-title, .title")
-        img = card.select_one("img")
-        desc = card.select_one(".movie-summary, .summary, .description")
-        if name and img:
+
+    # استخراج اطلاعات فیلم‌ها
+    cards = driver.find_elements(By.CSS_SELECTOR, '.movie-card')
+    for card in cards:
+        try:
+            title = card.find_element(By.CSS_SELECTOR, '.movie-title').text
+            desc = card.find_element(By.CSS_SELECTOR, '.movie-story').text
+            img = card.find_element(By.CSS_SELECTOR, 'img').get_attribute('src')
+
             movies.append({
-                "name": name.get_text(strip=True),
-                "poster": img["src"] if img["src"].startswith("http") else BASE_URL + img["src"].lstrip("/"),
-                "desc": desc.get_text(strip=True) if desc else "بدون توضیح"
+                'title': title,
+                'description': desc,
+                'image_url': img
             })
+        except:
+            continue
+
+    driver.quit()
     return movies
 
-def generate_html(movies):
-    with open("templates/base.html", encoding="utf-8") as f:
-        base_html = f.read()
+def save_html(movies):
+    env = Environment(loader=FileSystemLoader('templates'))
+    template = env.get_template('base.html')
 
-    movie_items = ""
-    for movie in movies:
-        movie_items += f'''
-        <div class="movie">
-            <img src="{movie['poster']}" alt="{movie['name']}">
-            <div class="movie-title">{movie['name']}</div>
-            <div class="movie-desc">{movie['desc']}</div>
-        </div>
-        '''
+    output = template.render(movies=movies)
+    output_path = os.path.join("public", "now_showing.html")
+    with open(output_path, "w", encoding="utf-8") as f:
+        f.write(output)
 
-    final_html = base_html.replace("{{MOVIES}}", movie_items)
-    final_html = final_html.replace("{{UPDATED_AT}}", datetime.now().strftime("%Y-%m-%d %H:%M"))
-
-    with open(HTML_PATH, "w", encoding="utf-8") as f:
-        f.write(final_html)
+def main():
+    movies = fetch_movies()
+    save_html(movies)
 
 if __name__ == "__main__":
-    movies = fetch_movies()
-    generate_html(movies)
+    main()
