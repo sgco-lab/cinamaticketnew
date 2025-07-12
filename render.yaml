@@ -1,5 +1,7 @@
 services:
-  - type: static
-    name: cinematicket
-    env: static
+  - type: web
+    name: cinamaticketnew
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python scraper.py
     staticPublishPath: public
