@@ -12,7 +12,8 @@ def fetch_movies():
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)    driver.get("https://www.cinematicket.org/")
+driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
+driver.get("https://www.cinematicket.org/")
 
     time.sleep(10)  # صبر برای بارگذاری کامل JS
 
