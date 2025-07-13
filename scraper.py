@@ -1,47 +1,55 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
-from bs4 import BeautifulSoup
-import os
 import time
-from datetime import datetime
+import requests
+from bs4 import BeautifulSoup
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 
 def fetch_movies():
-    options = Options()
+    options = webdriver.ChromeOptions()
     options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
     options.add_argument('--no-sandbox')
     options.add_argument('--disable-dev-shm-usage')
 
-    driver = webdriver.Chrome(executable_path=ChromeDriverManager().install(), options=options)
+    service = Service(ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=options)
+
     driver.get("https://www.cinematicket.org/")
 
     time.sleep(10)  # صبر برای بارگذاری کامل JS
 
-    html = driver.page_source
+    soup = BeautifulSoup(driver.page_source, "html.parser")
     driver.quit()
 
-    soup = BeautifulSoup(html, "html.parser")
     movies = []
 
-    movie_sections = soup.find_all("div", class_="movie-card__info")
-    for section in movie_sections:
-        title = section.find("h2")
-        desc = section.find("p")
-        poster = section.find_previous("img")
+    for movie_card in soup.select(".movie-card"):
+        title_tag = movie_card.select_one(".movie-name")
+        desc_tag = movie_card.select_one(".desc")
 
-        if title and poster:
-            movies.append({
-                "title": title.text.strip(),
-                "description": desc.text.strip() if desc else "",
-                "poster": poster['src']
-            })
+        if title_tag:
+            title = title_tag.text.strip()
+        else:
+            title = "بدون عنوان"
+
+        if desc_tag:
+            description = desc_tag.text.strip()
+        else:
+            description = ""
+
+        poster = movie_card.select_one("img")
+        poster_url = poster["src"] if poster and "src" in poster.attrs else ""
+
+        movies.append({
+            "title": title,
+            "description": description,
+            "poster": poster_url
+        })
 
     return movies
 
-def save_to_html(movies):
-    now = datetime.now().strftime("%Y-%m-%d %H:%M")
-
+def generate_html(movies):
+    now = time.strftime("%Y-%m-%d %H:%M")
     html = f"""<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -50,49 +58,73 @@ def save_to_html(movies):
     <style>
         body {{
             font-family: sans-serif;
-            background-color: #f9f9f9;
+            background: #f7f7f7;
             color: #111;
             padding: 30px;
         }}
         h1 {{
-            color: #000;
+            text-align: right;
+            font-size: 28px;
+        }}
+        .updated {{
+            text-align: right;
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 30px;
         }}
         .movie {{
-            margin-bottom: 40px;
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }}
         .movie img {{
-            width: 200px;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            width: 120px;
+            height: auto;
+            border-radius: 6px;
+        }}
+        .movie .info {{
+            flex: 1;
+        }}
+        .movie .title {{
+            font-size: 20px;
+            margin-bottom: 8px;
+        }}
+        .movie .desc {{
+            font-size: 15px;
+            line-height: 1.6;
         }}
     </style>
 </head>
 <body>
     <h1>فیلم‌های در حال اکران</h1>
-    <p>آخرین بروزرسانی: {now}</p>
+    <div class="updated">آخرین بروزرسانی: {now}</div>
 """
-
-    for m in movies:
+    for movie in movies:
         html += f"""
     <div class="movie">
-        <h2>{m['title']}</h2>
-        <img src="{m['poster']}" alt="{m['title']}">
-        <p>{m['description']}</p>
+        <img src="{movie['poster']}" alt="{movie['title']}">
+        <div class="info">
+            <div class="title">{movie['title']}</div>
+            <div class="desc">{movie['description']}</div>
+        </div>
     </div>
 """
-
     html += """
 </body>
 </html>
 """
-
-    os.makedirs("public", exist_ok=True)
-    with open("public/now_showing.html", "w", encoding="utf-8") as f:
-        f.write(html)
+    return html
 
 def main():
     movies = fetch_movies()
-    save_to_html(movies)
+    html = generate_html(movies)
+    with open("public/now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html)
 
 if __name__ == "__main__":
     main()
