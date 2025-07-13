@@ -1,7 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
 import os
@@ -11,9 +10,10 @@ def scrape_samfaa():
     options.add_argument("--headless")
     options.add_argument("--no-sandbox")
     options.add_argument("--disable-dev-shm-usage")
+    options.binary_location = "/usr/bin/chromium-browser"  # اضافه کردن مسیر باینری مرورگر
 
-    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    
+    driver = webdriver.Chrome(service=Service("/usr/bin/chromedriver"), options=options)
+
     try:
         driver.get("https://www.samfaa.ir/")
         time.sleep(10)
@@ -21,17 +21,22 @@ def scrape_samfaa():
         html = driver.page_source
         soup = BeautifulSoup(html, "html.parser")
 
+        films = soup.select('.card-content')
         movie_items = []
-        movie_boxes = soup.select("div.swiper-slide img")
 
-        for img in movie_boxes:
-            image_url = img.get("src")
-            title = img.get("alt", "بدون عنوان")
+        for film in films:
+            title = film.select_one('.movie-title')
+            img = film.find_previous('img')
+            desc = film.select_one('.movie-desc')
+
+            name = title.text.strip() if title else "بدون عنوان"
+            image_url = img['src'] if img else ""
+            description = desc.text.strip() if desc else ""
 
             movie_items.append({
-                'title': title.strip(),
+                'title': name,
                 'image': image_url,
-                'desc': ""
+                'desc': description
             })
 
     finally:
@@ -109,10 +114,6 @@ def generate_html(movies):
     with open("public/now_showing.html", "w", encoding="utf-8") as f:
         f.write(html_content)
 
-
 if __name__ == "__main__":
     movies = scrape_samfaa()
-    if movies:
-        generate_html(movies)
-    else:
-        print("هیچ فیلمی استخراج نشد")
+    generate_html(movies)
