@@ -109,6 +109,10 @@ def generate_html(movies):
     with open("public/now_showing.html", "w", encoding="utf-8") as f:
         f.write(html_content)
 
+
 if __name__ == "__main__":
     movies = scrape_samfaa()
-    generate_html(movies)
+    if movies:
+        generate_html(movies)
+    else:
+        print("هیچ فیلمی استخراج نشد")
