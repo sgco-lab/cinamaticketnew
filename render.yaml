@@ -1,5 +1,10 @@
 services:
-  - type: static
-    name: cinematicket
-    env: static
-    staticPublishPath: public
+  - type: web
+    name: cinamaticket-scraper
+    env: python
+    buildCommand: |
+      apt-get update
+      apt-get install -y chromium-browser chromium-chromedriver
+      pip install -r requirements.txt
+    startCommand: python scraper.py && python3 -m http.server public
+    plan: free
