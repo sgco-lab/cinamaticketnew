@@ -2,12 +2,13 @@ name: Daily Update
 
 on:
   schedule:
-    - cron: '0 6 * * *'
-  workflow_dispatch:
+    - cron: '0 6 * * *'  # هر روز ساعت ۶ صبح به‌وقت UTC (ساعت ۹:۳۰ صبح ایران)
+  workflow_dispatch:      # اجرای دستی
 
 jobs:
   update-html:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
@@ -30,3 +31,9 @@ jobs:
           git add public/now_showing.html
           git commit -m "update HTML [auto]" || echo "no changes to commit"
           git push
+
+      - name: Upload HTML output
+        uses: actions/upload-artifact@v4
+        with:
+          name: samfaa_output
+          path: samfaa_page.html
