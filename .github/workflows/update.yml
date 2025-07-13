@@ -30,3 +30,9 @@ jobs:
           git add public/now_showing.html
           git commit -m "update HTML [auto]" || echo "no changes to commit"
           git push
+
+      - name: Upload HTML output
+        uses: actions/upload-artifact@v3
+        with:
+          name: samfaa_output
+          path: samfaa_page.html
