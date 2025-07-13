@@ -1,59 +1,29 @@
 import requests
-from bs4 import BeautifulSoup
-import os
+import json
+from datetime import datetime
 
-# دریافت HTML از سامفا
-url = "https://www.samfaa.ir/"
-headers = {
-    "User-Agent": "Mozilla/5.0"
-}
-response = requests.get(url, headers=headers)
-soup = BeautifulSoup(response.content, "html.parser")
+URL = "https://www.samfaa.ir/api/v1/show/recent_shows?recently=all&province=0"
 
-# استخراج فیلم‌ها
-movies = soup.select("div.card")
+def fetch_and_generate():
+    response = requests.get(URL)
+    data = response.json()
 
-# ساخت HTML خروجی
-output_html = """
-<!DOCTYPE html>
-<html lang="fa" dir="rtl">
-<head>
-    <meta charset="UTF-8">
-    <title>فیلم‌های در حال اکران</title>
-    <style>
-        body { font-family: sans-serif; background: #f5f5f5; padding: 20px; direction: rtl; }
-        .movie { background: white; border-radius: 8px; padding: 10px; margin-bottom: 15px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-        img { max-width: 100%; border-radius: 8px; }
-        .title { font-size: 18px; font-weight: bold; margin-top: 10px; }
-        .desc { font-size: 14px; color: #444; margin-top: 5px; }
-    </style>
-</head>
-<body>
-    <h2>فیلم‌های در حال اکران</h2>
-"""
+    movies = data.get("data", [])
+    print(f"📽️ تعداد فیلم‌ها: {len(movies)}")
 
-for movie in movies:
-    title = movie.select_one(".card-title").get_text(strip=True) if movie.select_one(".card-title") else "بدون عنوان"
-    desc = movie.select_one(".card-text").get_text(strip=True) if movie.select_one(".card-text") else ""
-    img_tag = movie.select_one("img")
-    img = img_tag["src"] if img_tag and "src" in img_tag.attrs else ""
+    html = "<!DOCTYPE html><html lang='fa' dir='rtl'><head><meta charset='utf-8'><title>فیلم‌های در حال اکران</title></head><body>"
+    html += f"<h2>فیلم‌های فعال ({len(movies)} مورد)</h2><ul>"
 
-    output_html += f"""
-    <div class="movie">
-        <img src="{img}" alt="{title}">
-        <div class="title">{title}</div>
-        <div class="desc">{desc}</div>
-    </div>
-    """
+    for movie in movies:
+        name = movie.get("movie", {}).get("title", "بدون نام")
+        poster = movie.get("movie", {}).get("poster_url", "")
+        description = movie.get("movie", {}).get("summary", "")
+        html += f"<li><h3>{name}</h3><img src='{poster}' width='200'/><p>{description}</p></li>"
 
-output_html += """
-</body>
-</html>
-"""
+    html += "</ul></body></html>"
 
-# ذخیره در فایل public
-os.makedirs("public", exist_ok=True)
-with open("public/now_showing.html", "w", encoding="utf-8") as f:
-    f.write(output_html)
+    with open("now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html)
 
-print(f"تعداد فیلم‌ها: {len(movies)}")
+if __name__ == "__main__":
+    fetch_and_generate()
