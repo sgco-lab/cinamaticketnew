@@ -1,57 +1,79 @@
 import requests
+import datetime
 
-URL = "https://www.samfaa.ir/api/v1/show/recent_shows?recently=all&province=0"
+url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
 
-def fetch_and_generate():
-    try:
-        response = requests.get(URL, timeout=10)
-        if response.status_code != 200:
-            print("❌ خطا در دریافت اطلاعات:", response.status_code)
-            print(response.text)
-            return
-        
-        data = response.json()
-        movies = data.get("data", [])
-        print(f"🎬 تعداد فیلم‌ها: {len(movies)}")
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
 
-        html = """
-        <!DOCTYPE html>
-        <html lang="fa" dir="rtl">
-        <head>
-            <meta charset="utf-8">
-            <title>فیلم‌های در حال اکران</title>
-            <style>
-                body { font-family: sans-serif; direction: rtl; padding: 20px; }
-                h2 { color: #014874; }
-                img { max-width: 150px; border-radius: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
-                li { margin-bottom: 30px; list-style: none; }
-            </style>
-        </head>
-        <body>
-            <h2>فیلم‌های فعال ({}) مورد</h2>
-            <ul>
-        """.format(len(movies))
+response = requests.get(url, headers=headers)
 
-        for movie in movies:
-            name = movie.get("movie", {}).get("title", "بدون عنوان")
-            poster = movie.get("movie", {}).get("poster_url", "")
-            description = movie.get("movie", {}).get("summary", "")
+if response.status_code == 200 and response.text.strip():
+    data = response.json()
 
-            html += f"""
-            <li>
-                <h3>{name}</h3>
-                <img src="{poster}" alt="{name}">
-                <p>{description}</p>
-            </li>
-            """
+    html = """<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>فیلم‌های در حال اکران</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f9f9f9;
+      color: #333;
+      padding: 20px;
+      direction: rtl;
+      text-align: right;
+    }
+    .movie {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 20px;
+    }
+    .movie img {
+      max-width: 200px;
+      border-radius: 8px;
+    }
+    .details {
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h2>فیلم‌های در حال اکران</h2>
+"""
 
-        html += "</ul></body></html>"
+    for movie in data:
+        title = movie.get("fa_name", "بدون عنوان")
+        poster = movie.get("poster_url", "")
+        director = movie.get("director", "")
+        description = movie.get("description", "")
 
-        with open("now_showing.html", "w", encoding="utf-8") as f:
-            f.write(html)
+        html += f"""
+  <div class="movie">
+    <img src="{poster}" alt="{title}">
+    <div class="details">
+      <h3>{title}</h3>
+      <p><strong>کارگردان:</strong> {director}</p>
+      <p>{description}</p>
+    </div>
+  </div>
+"""
 
-    except Exception as e:
-        print("❌ خطا در اجرای برنامه:", str(e))
+    html += f"""
+  <p style="text-align:center; font-size:14px; color:#777;">به‌روزرسانی: {datetime.datetime.now().strftime('%Y-%m-%d %H:%M')}</p>
+</body>
+</html>
+"""
 
-if __name__ == "__main__":
-    fetch_and_generate()
+    with open("now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+    print(f"✅ فایل now_showing.html با {len(data)} فیلم ذخیره شد.")
+
+else:
+    print(f"❌ دریافت اطلاعات ناموفق بود. کد وضعیت: {response.status_code}")
