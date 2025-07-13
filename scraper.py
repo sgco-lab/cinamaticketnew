@@ -1,48 +1,107 @@
-import requests
+
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.options import Options
 from bs4 import BeautifulSoup
-from datetime import datetime
+import time
 import os
 
-BASE_URL = "https://cinematicket.org/"
-HTML_PATH = "public/now_showing.html"
-os.makedirs("public", exist_ok=True)
+def main():
+    options = Options()
+    options.add_argument("--headless")
+    options.add_argument("--disable-gpu")
+    options.add_argument("--no-sandbox")
 
-def fetch_movies():
-    response = requests.get(BASE_URL)
-    soup = BeautifulSoup(response.text, "html.parser")
-    movies = []
-    for card in soup.select(".movie-card, .movie-item"):
-        name = card.select_one(".movie-title, .title")
-        img = card.select_one("img")
-        desc = card.select_one(".movie-summary, .summary, .description")
-        if name and img:
-            movies.append({
-                "name": name.get_text(strip=True),
-                "poster": img["src"] if img["src"].startswith("http") else BASE_URL + img["src"].lstrip("/"),
-                "desc": desc.get_text(strip=True) if desc else "بدون توضیح"
-            })
-    return movies
+    driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
 
-def generate_html(movies):
-    with open("templates/base.html", encoding="utf-8") as f:
-        base_html = f.read()
+    try:
+        driver.get("https://www.samfaa.ir/")
+        print("در حال بارگذاری صفحه...")
+        time.sleep(12)
 
-    movie_items = ""
-    for movie in movies:
-        movie_items += f'''
-        <div class="movie">
-            <img src="{movie['poster']}" alt="{movie['name']}">
-            <div class="movie-title">{movie['name']}</div>
-            <div class="movie-desc">{movie['desc']}</div>
-        </div>
-        '''
+        soup = BeautifulSoup(driver.page_source, "html.parser")
+        movies_section = soup.find_all("div", class_="v-card")
 
-    final_html = base_html.replace("{{MOVIES}}", movie_items)
-    final_html = final_html.replace("{{UPDATED_AT}}", datetime.now().strftime("%Y-%m-%d %H:%M"))
+        output_html = '''<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>فیلم‌های در حال اکران</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body { font-family: Tahoma, sans-serif; background: #f7f7f7; padding: 20px; }
+    h1 { text-align: center; color: #333; }
+    .grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
+    .card {
+      width: 22%;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      overflow: hidden;
+      direction: rtl;
+      text-align: center;
+      padding-bottom: 10px;
+    }
+    .card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+      border-bottom: 1px solid #eee;
+    }
+    .card h3 {
+      margin: 10px 0 5px;
+      font-size: 18px;
+      color: #014874;
+    }
+    .card p {
+      font-size: 14px;
+      padding: 0 10px;
+      color: #444;
+    }
+    @media (max-width: 768px) {
+      .card { width: 45%; }
+    }
+    @media (max-width: 500px) {
+      .card { width: 100%; }
+    }
+  </style>
+</head>
+<body>
+  <h1>فیلم‌های در حال اکران</h1>
+  <div class="grid">'''
 
-    with open(HTML_PATH, "w", encoding="utf-8") as f:
-        f.write(final_html)
+        count = 0
+        for div in movies_section:
+            img_tag = div.find("img")
+            title_tag = div.find("h3") or div.find("span")
+            if not img_tag or not title_tag:
+                continue
+            img_src = img_tag.get("src")
+            title = title_tag.get_text(strip=True)
+            output_html += f'''
+    <div class="card">
+      <img src="{img_src}" alt="{title}">
+      <h3>{title}</h3>
+      <p>در حال اکران در سینماهای کشور</p>
+    </div>'''
+            count += 1
+            if count >= 12:
+                break
+
+        output_html += '''
+  </div>
+</body>
+</html>'''
+
+        os.makedirs("public", exist_ok=True)
+        with open("public/now_showing.html", "w", encoding="utf-8") as f:
+            f.write(output_html)
+
+        print("فایل now_showing.html با موفقیت ساخته شد.")
+
+    finally:
+        driver.quit()
 
 if __name__ == "__main__":
-    movies = fetch_movies()
-    generate_html(movies)
+    main()
