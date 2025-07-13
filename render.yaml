@@ -3,7 +3,5 @@ services:
     name: cinamaticket-scraper
     runtime: python
     buildCommand: ""
-    startCommand: python scraper.py && python3 -m http.server $PORT --directory public
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.10
+    startCommand: python scraper.py && python3 -m http.server
+    env: python
