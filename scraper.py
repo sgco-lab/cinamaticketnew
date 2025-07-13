@@ -1,31 +1,17 @@
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.chrome.options import Options
-from webdriver_manager.chrome import ChromeDriverManager
+import requests
 from bs4 import BeautifulSoup
-import time
 import os
 
-# تنظیمات مرورگر برای headless mode
-options = Options()
-options.add_argument("--headless")
-options.add_argument("--no-sandbox")
-options.add_argument("--disable-dev-shm-usage")
+# دریافت HTML از سامفا
+url = "https://www.samfaa.ir/"
+headers = {
+    "User-Agent": "Mozilla/5.0"
+}
+response = requests.get(url, headers=headers)
+soup = BeautifulSoup(response.content, "html.parser")
 
-# راه‌اندازی مرورگر
-driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-
-# رفتن به صفحه اصلی سامفا
-driver.get("https://www.samfaa.ir/")
-time.sleep(5)
-
-# استخراج HTML صفحه
-html = driver.page_source
-driver.quit()
-
-# پردازش HTML با BeautifulSoup
-soup = BeautifulSoup(html, "html.parser")
-movies = soup.select("div.card")  # فرض: هر فیلم در یک div.card نمایش داده می‌شود
+# استخراج فیلم‌ها
+movies = soup.select("div.card")
 
 # ساخت HTML خروجی
 output_html = """
@@ -65,10 +51,8 @@ output_html += """
 </html>
 """
 
-# ساخت پوشه public در صورت نیاز
+# ذخیره در فایل public
 os.makedirs("public", exist_ok=True)
-
-# ذخیره در فایل HTML
 with open("public/now_showing.html", "w", encoding="utf-8") as f:
     f.write(output_html)
 
