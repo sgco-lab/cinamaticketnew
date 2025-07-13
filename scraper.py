@@ -1,46 +1,54 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
 from bs4 import BeautifulSoup
 import time
 import os
 
-def main():
-    # تنظیمات مرورگر برای headless
+def scrape_samfaa():
+    # تنظیمات مرورگر headless
     options = Options()
-    options.add_argument('--headless')
-    options.add_argument('--disable-gpu')
-    options.add_argument('--no-sandbox')
+    options.add_argument("--headless")
+    options.add_argument("--no-sandbox")
+    options.add_argument("--disable-dev-shm-usage")
 
-    # اجرا
+    # راه‌اندازی مرورگر
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.get("https://www.samfaa.ir/")
-    time.sleep(10)  # برای لود JS
+    
+    try:
+        driver.get("https://www.samfaa.ir/")
+        time.sleep(10)  # صبر برای بارگذاری JS
 
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
+        html = driver.page_source
+        soup = BeautifulSoup(html, "html.parser")
 
-    # استخراج فیلم‌ها
-    movie_cards = soup.select('.movie-card')  # باید دقیقاً با کلاس‌ها مطابقت داشته باشه
+        # استخراج بلوک‌های فیلم
+        films = soup.select('.card-content')  # class کارت‌های فیلم در samfaa.ir
+        movie_items = []
 
-    movies = []
-    for card in movie_cards:
-        title = card.select_one('.movie-title')
-        desc = card.select_one('.movie-description')
-        img = card.select_one('img')
+        for film in films:
+            title = film.select_one('.movie-title')
+            img = film.find_previous('img')
+            desc = film.select_one('.movie-desc')
 
-        if title and img:
-            movies.append({
-                'title': title.get_text(strip=True),
-                'description': desc.get_text(strip=True) if desc else '',
-                'image': img['src']
+            name = title.text.strip() if title else "بدون عنوان"
+            image_url = img['src'] if img else ""
+            description = desc.text.strip() if desc else ""
+
+            movie_items.append({
+                'title': name,
+                'image': image_url,
+                'desc': description
             })
 
-    driver.quit()
+    finally:
+        driver.quit()
 
-    # تولید HTML
-    html_output = """<!DOCTYPE html>
+    return movie_items
+
+def generate_html(movies):
+    html_content = """<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
@@ -88,27 +96,27 @@ def main():
   <h1>فیلم‌های در حال اکران</h1>
   <div class="movies-grid">
 """
+
     for movie in movies:
-        html_output += f"""
+        html_content += f"""
     <div class="movie-card">
       <img src="{movie['image']}" alt="{movie['title']}">
       <div class="movie-info">
         <h3>{movie['title']}</h3>
-        <p>{movie['description']}</p>
+        <p>{movie['desc']}</p>
       </div>
     </div>
 """
-    html_output += """
+
+    html_content += """
   </div>
 </body>
 </html>"""
 
-    # ذخیره در مسیر public
     os.makedirs("public", exist_ok=True)
     with open("public/now_showing.html", "w", encoding="utf-8") as f:
-        f.write(html_output)
-
-    print("✅ فایل now_showing.html با موفقیت ایجاد شد.")
+        f.write(html_content)
 
 if __name__ == "__main__":
-    main()
+    movies = scrape_samfaa()
+    generate_html(movies)
