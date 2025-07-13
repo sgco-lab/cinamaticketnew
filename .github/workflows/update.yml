@@ -2,8 +2,8 @@ name: Daily Update
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # هر روز ساعت ۶ صبح به‌وقت UTC (ساعت ۹:۳۰ صبح ایران)
-  workflow_dispatch:      # اجرای دستی
+    - cron: '0 6 * * *'  # هر روز ساعت 6 صبح UTC
+  workflow_dispatch:
 
 jobs:
   update-html:
@@ -18,11 +18,22 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install Chrome
+        run: |
+          sudo apt update
+          sudo apt install -y wget unzip xvfb libxi6 libgconf-2-4
+          wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+          sudo dpkg -i google-chrome-stable_current_amd64.deb || sudo apt -f install -y
+
+      - name: Install Python dependencies
         run: pip install -r requirements.txt
 
-      - name: Run scraper
-        run: python scraper.py
+      - name: Run Scraper Script
+        env:
+          DISPLAY: :99
+        run: |
+          Xvfb :99 &  # راه‌اندازی محیط گرافیکی مجازی
+          python scraper.py
 
       - name: Commit updated HTML
         run: |
@@ -31,9 +42,3 @@ jobs:
           git add public/now_showing.html
           git commit -m "update HTML [auto]" || echo "no changes to commit"
           git push
-
-      - name: Upload HTML output
-        uses: actions/upload-artifact@v4
-        with:
-          name: samfaa_output
-          path: samfaa_page.html
