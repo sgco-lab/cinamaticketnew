@@ -1,17 +1,17 @@
 import requests
-from datetime import datetime
-from html import escape
+import os
 
-url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
+URL = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
 
 try:
-    response = requests.get(url)
+    response = requests.get(URL)
     data = response.json()
+    movies = data.get("result", [])
 except Exception as e:
-    print("خطا در دریافت یا تجزیه داده‌ها:", e)
-    data = []
+    print(f"❌ خطا در دریافت اطلاعات: {e}")
+    movies = []
 
-html = '''
+html = """
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -68,39 +68,40 @@ html = '''
 <body>
     <h1>فیلم‌های در حال اکران</h1>
     <div class="container">
-'''
+"""
 
-for movie in data:
-    if isinstance(movie, dict):
-        title = escape(movie.get("fa_name", "بدون عنوان"))
-        director = escape(movie.get("director", "نامشخص"))
-        poster = movie.get("poster")
-        poster_url = poster if poster and poster.startswith("http") else "https://via.placeholder.com/300x450?text=No+Image"
-        tickets = "{:,}".format(movie.get("count_ticket", 0))
-        cinemas = "{:,}".format(movie.get("count_cinema", 0))
-        sessions = "{:,}".format(movie.get("count_session", 0))
+for movie in movies:
+    title = movie.get("fa_name", "عنوان نامشخص")
+    director = movie.get("director", "نامشخص")
+    poster = movie.get("poster_url") or "https://via.placeholder.com/400x600?text=No+Image"
+    ticket_count = "{:,}".format(movie.get("ticket_count", 0))
+    cinema_count = movie.get("cinema_count", 0)
+    session_count = movie.get("session_count", 0)
 
-        html += f'''
+    html += f"""
         <div class="card">
-            <img class="poster" src="{poster_url}" alt="{title}">
+            <img src="{poster}" class="poster" alt="{title}">
             <div class="content">
                 <div class="title">{title}</div>
-                <div class="info">کارگردان: {director}</div>
-                <div class="info">تعداد بلیت: {tickets}</div>
-                <div class="info">تعداد سینما: {cinemas}</div>
-                <div class="info">تعداد سانس: {sessions}</div>
+                <div class="info"><strong>کارگردان:</strong> {director}</div>
+                <div class="info"><strong>تعداد بلیت:</strong> {ticket_count}</div>
+                <div class="info"><strong>تعداد سالن:</strong> {cinema_count}</div>
+                <div class="info"><strong>تعداد سانس:</strong> {session_count}</div>
             </div>
         </div>
-        '''
+    """
 
-html += '''
+html += """
     </div>
 </body>
 </html>
-'''
+"""
 
-# ذخیره خروجی HTML
+# ساخت پوشه public اگر وجود نداشت
+os.makedirs("public", exist_ok=True)
+
+# ذخیره فایل HTML
 with open("public/now_showing.html", "w", encoding="utf-8") as f:
     f.write(html)
 
-print("✅ فایل now_showing.html با موفقیت ساخته شد.")
+print("✅ فایل public/now_showing.html با موفقیت ایجاد شد.")
