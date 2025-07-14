@@ -1,63 +1,65 @@
 import requests
-from pathlib import Path
+import os
 
-url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
+def fetch_movies():
+    url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
+    response = requests.get(url)
 
-response = requests.get(url)
-data = response.json()
+    if response.status_code == 200:
+        data = response.json()
+        return data.get("data", [])
+    else:
+        print("خطا در دریافت داده‌ها:", response.status_code)
+        return []
 
-movies = data.get("data", [])
-
-html = """
-<!DOCTYPE html>
+def generate_html(movies):
+    html = """<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
   <meta charset="UTF-8">
   <title>فیلم‌های در حال اکران</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
   <style>
     body {
       font-family: sans-serif;
-      background: #f0f0f0;
-      margin: 0;
+      background: #f4f4f4;
       padding: 20px;
       direction: rtl;
     }
     h1 {
       text-align: center;
-      margin-bottom: 30px;
+      color: #333;
     }
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 20px;
+      margin-top: 30px;
     }
     .card {
-      background: #fff;
-      border-radius: 8px;
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
-    .card:hover {
-      transform: scale(1.03);
-    }
-    .poster {
+    .card img {
       width: 100%;
-      height: 300px;
+      height: 350px;
       object-fit: cover;
     }
-    .info {
+    .card-content {
       padding: 15px;
     }
-    .info h2 {
+    .card-content h3 {
       margin: 0 0 10px;
       font-size: 18px;
+      color: #014874;
     }
-    .info p {
+    .card-content p {
       margin: 5px 0;
-      color: #444;
       font-size: 14px;
+      color: #555;
     }
   </style>
 </head>
@@ -66,31 +68,30 @@ html = """
   <div class="grid">
 """
 
-for movie in movies:
-    title = movie.get("fa_name", "نامشخص")
-    director = movie.get("director", "نامشخص")
-    ticket = "{:,}".format(movie.get("ticket_count", 0))
-    hall = "{:,}".format(movie.get("hall_count", 0))
-    session = "{:,}".format(movie.get("session_count", 0))
-    poster = movie.get("poster_url", "")
-
-    html += f"""
+    for movie in movies:
+        html += f"""
     <div class="card">
-      <img class="poster" src="{poster}" alt="{title}">
-      <div class="info">
-        <h2>{title}</h2>
-        <p>کارگردان: {director}</p>
-        <p>تعداد بلیت: {ticket}</p>
-        <p>تعداد سالن: {hall}</p>
-        <p>تعداد سانس: {session}</p>
+      <img src="{movie.get("photo", "")}" alt="{movie.get("movie_title", "")}">
+      <div class="card-content">
+        <h3>{movie.get("movie_title", "عنوان نامشخص")}</h3>
+        <p><strong>کارگردان:</strong> {movie.get("director", "نامشخص")}</p>
+        <p><strong>تعداد بلیت:</strong> {movie.get("total_tickets", 0)}</p>
+        <p><strong>تعداد سالن:</strong> {movie.get("total_cinemas", 0)}</p>
+        <p><strong>تعداد سانس:</strong> {movie.get("total_shows", 0)}</p>
       </div>
     </div>
-    """
+"""
 
-html += """
+    html += """
   </div>
 </body>
 </html>
 """
 
-Path("now_showing.html").write_text(html, encoding="utf-8")
+    os.makedirs("public", exist_ok=True)
+    with open("public/now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html)
+
+if __name__ == "__main__":
+    movies = fetch_movies()
+    generate_html(movies)
