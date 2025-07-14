@@ -1,0 +1,34 @@
+name: Daily Scrape and Deploy
+
+on:
+  schedule:
+    - cron: '0 3 * * *'  # هر روز ساعت 03:00 UTC
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install requests beautifulsoup4
+
+      - name: Run scraper
+        run: python scraper.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+          git add public/now_showing.html
+          git commit -m "Auto-update now_showing.html" || echo "No changes to commit"
+          git push
