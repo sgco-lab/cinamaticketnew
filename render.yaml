@@ -1,7 +1,11 @@
 services:
   - type: web
     name: cinamaticket-scraper
-    runtime: python
-    buildCommand: ""
-    startCommand: python scraper.py && python3 -m http.server
     env: python
+    buildCommand: ""
+    startCommand: python scraper.py && python3 -m http.server 10000
+    plan: free
+    envVars: []
+    autoDeploy: true
+    branch: main
+    rootDir: .
