@@ -1,18 +1,14 @@
 import requests
 import os
 
-URL = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
-
-try:
-    response = requests.get(URL)
+def fetch_movies():
+    url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
+    response = requests.get(url)
     data = response.json()
-    movies = data.get("result", [])
-except Exception as e:
-    print(f"❌ خطا در دریافت اطلاعات: {e}")
-    movies = []
+    return data.get("data", [])
 
-html = """
-<!DOCTYPE html>
+def generate_html(movies):
+    html = """<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -70,38 +66,29 @@ html = """
     <div class="container">
 """
 
-for movie in movies:
-    title = movie.get("fa_name", "عنوان نامشخص")
-    director = movie.get("director", "نامشخص")
-    poster = movie.get("poster_url") or "https://via.placeholder.com/400x600?text=No+Image"
-    ticket_count = "{:,}".format(movie.get("ticket_count", 0))
-    cinema_count = movie.get("cinema_count", 0)
-    session_count = movie.get("session_count", 0)
-
-    html += f"""
+    for movie in movies:
+        html += f"""
         <div class="card">
-            <img src="{poster}" class="poster" alt="{title}">
+            <img class="poster" src="{movie.get('poster') or ''}" alt="{movie.get('movie_name', 'بدون عنوان')}">
             <div class="content">
-                <div class="title">{title}</div>
-                <div class="info"><strong>کارگردان:</strong> {director}</div>
-                <div class="info"><strong>تعداد بلیت:</strong> {ticket_count}</div>
-                <div class="info"><strong>تعداد سالن:</strong> {cinema_count}</div>
-                <div class="info"><strong>تعداد سانس:</strong> {session_count}</div>
+                <div class="title">{movie.get('movie_name', '')}</div>
+                <div class="info">کارگردان: {movie.get('director', '')}</div>
+                <div class="info">تعداد سانس: {movie.get('total_screen', '')}</div>
+                <div class="info">تعداد سالن: {movie.get('total_cinema', '')}</div>
+                <div class="info">تعداد بلیت: {movie.get('ticket_count', '')}</div>
             </div>
         </div>
-    """
+        """
 
-html += """
+    html += """
     </div>
 </body>
 </html>
 """
+    os.makedirs("public", exist_ok=True)
+    with open("public/now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html)
 
-# ساخت پوشه public اگر وجود نداشت
-os.makedirs("public", exist_ok=True)
-
-# ذخیره فایل HTML
-with open("public/now_showing.html", "w", encoding="utf-8") as f:
-    f.write(html)
-
-print("✅ فایل public/now_showing.html با موفقیت ایجاد شد.")
+if __name__ == "__main__":
+    movies = fetch_movies()
+    generate_html(movies)
