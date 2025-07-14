@@ -7,54 +7,370 @@
     <style>
         body {
             font-family: sans-serif;
-            direction: rtl;
-            background-color: #f5f5f5;
-            margin: 0;
-            padding: 30px;
+            background-color: #f9f9f9;
+            padding: 40px;
         }
-        h1 {
-            text-align: center;
-            color: #222;
-        }
-        .container {
+        .grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 25px;
-            max-width: 1400px;
-            margin: auto;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
         }
         .card {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            border-radius: 10px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
             overflow: hidden;
-            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
         }
-        .card:hover {
-            transform: scale(1.02);
-        }
-        .poster {
+        .card img {
             width: 100%;
-            height: 350px;
+            height: 360px;
             object-fit: cover;
         }
-        .content {
+        .card-content {
             padding: 15px;
         }
-        .title {
-            font-size: 20px;
-            color: #0d47a1;
-            margin-bottom: 10px;
+        .card-content h3 {
+            margin: 0 0 10px;
+            font-size: 18px;
+            color: #333;
         }
-        .info {
+        .card-content p {
+            margin: 5px 0;
             font-size: 14px;
-            margin-bottom: 5px;
+            color: #666;
         }
     </style>
 </head>
 <body>
-    <h1>فیلم‌های در حال اکران</h1>
-    <div class="container">
+    <h1 style="text-align:center; color:#014874;">فیلم‌های در حال اکران</h1>
+    <div class="grid">
+        
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/0vKx3I6ZBXLlWcQfcmfFwe5VeCjWsShzxLVAc1tj.png" alt="دایناسور">
+    <div class="card-content">
+        <h3>دایناسور</h3>
+        <p>کارگردان: مسعود اطیابی</p>
+        <p>تعداد بلیت: 1,853,131</p>
+        <p>سالن‌: 750</p>
+        <p>سانس: 54,851</p>
+        <p>شروع اکران: 1403/12/08</p>
+        <p>فروش: 1,509,816,022,489 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/5haoH8nANJy7w7RRI7QFdaKJscgeaNv0XwYdihwG.png" alt="صددام">
+    <div class="card-content">
+        <h3>صددام</h3>
+        <p>کارگردان: پدرام پورامیری</p>
+        <p>تعداد بلیت: 1,270,105</p>
+        <p>سالن‌: 692</p>
+        <p>سانس: 36,653</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 1,029,505,673,616 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/eRBGJjxkDsLtrK6dwT8dkWMQeGO1zWC3t0WHAIXr.jpg" alt="موسی کلیم ا...">
+    <div class="card-content">
+        <h3>موسی کلیم ا...</h3>
+        <p>کارگردان: ابراهیم حاتمی کیا</p>
+        <p>تعداد بلیت: 925,769</p>
+        <p>سالن‌: 681</p>
+        <p>سانس: 28,340</p>
+        <p>شروع اکران: 1403/12/08</p>
+        <p>فروش: 694,122,469,306 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/TjPVFhK77AB0vdFdK44FOXcVmyBdhMzaFFkI7FQK.png" alt="کوکتل مولوتف">
+    <div class="card-content">
+        <h3>کوکتل مولوتف</h3>
+        <p>کارگردان: حسین دوماری</p>
+        <p>تعداد بلیت: 720,006</p>
+        <p>سالن‌: 665</p>
+        <p>سانس: 26,809</p>
+        <p>شروع اکران: 1403/12/15</p>
+        <p>فروش: 620,381,393,527 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/FWcuP6BFZhA1U8nGugm6JOrXYFbWeZvARaYwH0VS.jpg" alt="پیر پسر">
+    <div class="card-content">
+        <h3>پیر پسر</h3>
+        <p>کارگردان: اکتای براهنی</p>
+        <p>تعداد بلیت: 432,939</p>
+        <p>سالن‌: 602</p>
+        <p>سانس: 11,905</p>
+        <p>شروع اکران: 1404/03/21</p>
+        <p>فروش: 406,775,769,829 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/OqLhRiIMCvjHfhktOo3FN5pNW5JXFCzADFQJYeHr.png" alt="رها">
+    <div class="card-content">
+        <h3>رها</h3>
+        <p>کارگردان: حسام فرهمند</p>
+        <p>تعداد بلیت: 407,554</p>
+        <p>سالن‌: 492</p>
+        <p>سانس: 19,423</p>
+        <p>شروع اکران: 1403/12/09</p>
+        <p>فروش: 370,443,239,850 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/tjKCyX6AmvQ80jqs8phelXbQf1vyboMVKD7nuuP7.png" alt="پسر دلفینی 2">
+    <div class="card-content">
+        <h3>پسر دلفینی 2</h3>
+        <p>کارگردان: محمد خیراندیش</p>
+        <p>تعداد بلیت: 433,222</p>
+        <p>سالن‌: 608</p>
+        <p>سانس: 20,739</p>
+        <p>شروع اکران: 1403/12/03</p>
+        <p>فروش: 301,857,476,255 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/NkfLI8CvyRQOXJMEZXnUxlt8J03rQ6Q1cT5Ntx3Z.png" alt="خانه ارواح">
+    <div class="card-content">
+        <h3>خانه ارواح</h3>
+        <p>کارگردان: کیارش اسدی زاده</p>
+        <p>تعداد بلیت: 305,086</p>
+        <p>سالن‌: 623</p>
+        <p>سانس: 16,314</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 248,634,404,300 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/iG9TWk6gXaWllRqbWHGk2n3YLDnu8fRjSofSI3o9.png" alt="سلام علیکم حاج آقا">
+    <div class="card-content">
+        <h3>سلام علیکم حاج آقا</h3>
+        <p>کارگردان: حسین تبریزی</p>
+        <p>تعداد بلیت: 324,878</p>
+        <p>سالن‌: 593</p>
+        <p>سانس: 14,331</p>
+        <p>شروع اکران: 1404/02/27</p>
+        <p>فروش: 243,033,724,564 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/pS1rHW05kjSsEXaPpNi54C4ZaqTEFPDaFn2Mj7Tv.jpg" alt="بامبولک">
+    <div class="card-content">
+        <h3>بامبولک</h3>
+        <p>کارگردان: آرش معیریان</p>
+        <p>تعداد بلیت: 283,954</p>
+        <p>سالن‌: 506</p>
+        <p>سانس: 15,295</p>
+        <p>شروع اکران: 1403/12/08</p>
+        <p>فروش: 179,138,560,305 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/5MnHjRDcHVvhxElqk2B9YAzvF2KKs34BtEqrMZZy.jpg" alt="انیمیشن رویا شهر">
+    <div class="card-content">
+        <h3>انیمیشن رویا شهر</h3>
+        <p>کارگردان: محسن عنایتی</p>
+        <p>تعداد بلیت: 265,283</p>
+        <p>سالن‌: 543</p>
+        <p>سانس: 13,465</p>
+        <p>شروع اکران: 1404/02/03</p>
+        <p>فروش: 169,623,494,579 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/lui6EtJlkd52BK6Y6iHWc2trhBh2RLfmzniQReiT.jpg" alt="پیشمرگ">
+    <div class="card-content">
+        <h3>پیشمرگ</h3>
+        <p>کارگردان: علی غفاری</p>
+        <p>تعداد بلیت: 277,489</p>
+        <p>سالن‌: 412</p>
+        <p>سانس: 8,651</p>
+        <p>شروع اکران: 1403/12/08</p>
+        <p>فروش: 151,836,202,307 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/C69vGyRbYHEdDV0s9mHgYSpx71jHBgkZ2Rhsf5kF.jpg" alt="زیبا صدایم کن">
+    <div class="card-content">
+        <h3>زیبا صدایم کن</h3>
+        <p>کارگردان: رسول صدرعاملی</p>
+        <p>تعداد بلیت: 170,852</p>
+        <p>سالن‌: 533</p>
+        <p>سانس: 10,358</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 141,799,935,333 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/vlM2IG0OELAJJnjYnW5SF77HWZ4XNZHmijWpmtl3.jpg" alt="صیاد">
+    <div class="card-content">
+        <h3>صیاد</h3>
+        <p>کارگردان: جواد افشار</p>
+        <p>تعداد بلیت: 96,562</p>
+        <p>سالن‌: 318</p>
+        <p>سانس: 3,956</p>
+        <p>شروع اکران: 1404/01/20</p>
+        <p>فروش: 58,587,774,005 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/SnuaoMTQ95zyw2avLskgINIRDmOZpeRWHDMJgTXT.jpg" alt="بی سر و صدا">
+    <div class="card-content">
+        <h3>بی سر و صدا</h3>
+        <p>کارگردان: مجیدرضا مصطفوی</p>
+        <p>تعداد بلیت: 63,720</p>
+        <p>سالن‌: 373</p>
+        <p>سانس: 4,843</p>
+        <p>شروع اکران: 1404/02/24</p>
+        <p>فروش: 55,731,868,593 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/DexSKnLuos22F6qaHC5ASO3Tw0BtALo2RQSlhZqz.jpg" alt="اسفند">
+    <div class="card-content">
+        <h3>اسفند</h3>
+        <p>کارگردان: دانش اقباشاوی</p>
+        <p>تعداد بلیت: 27,792</p>
+        <p>سالن‌: 193</p>
+        <p>سانس: 1,666</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 16,805,386,486 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/zRquYq6JgJohDjZxAzgcIUNRvTTSfNPKBhe3IzGe.jpg" alt="عینک قرمز">
+    <div class="card-content">
+        <h3>عینک قرمز</h3>
+        <p>کارگردان: حسین مهکام</p>
+        <p>تعداد بلیت: 6,051</p>
+        <p>سالن‌: 199</p>
+        <p>سانس: 957</p>
+        <p>شروع اکران: 1403/12/08</p>
+        <p>فروش: 4,857,615,000 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/4WWw3H0quGHZm2V31kvrb6GBUuoTl5phEnlVFDMI.png" alt="هر چی تو بگی">
+    <div class="card-content">
+        <h3>هر چی تو بگی</h3>
+        <p>کارگردان: مرتضی آتش زمزم</p>
+        <p>تعداد بلیت: 5,736</p>
+        <p>سالن‌: 131</p>
+        <p>سانس: 761</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 4,637,930,220 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/gOdca7buMjv7S5x2XMDWzA5NYITnEgY0DG2BnAGT.png" alt="بازی را بکش">
+    <div class="card-content">
+        <h3>بازی را بکش</h3>
+        <p>کارگردان: محمدابراهیم عزیزی</p>
+        <p>تعداد بلیت: 3,052</p>
+        <p>سالن‌: 147</p>
+        <p>سانس: 579</p>
+        <p>شروع اکران: 1404/02/17</p>
+        <p>فروش: 2,574,990,709 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/f5fIiYOestQfBDCtROign128svppgCXEfg6o8gzB.jpg" alt="آنجا همان ساعت">
+    <div class="card-content">
+        <h3>آنجا همان ساعت</h3>
+        <p>کارگردان: سیروس الوند</p>
+        <p>تعداد بلیت: 1,955</p>
+        <p>سالن‌: 84</p>
+        <p>سانس: 194</p>
+        <p>شروع اکران: 1404/04/18</p>
+        <p>فروش: 2,030,230,026 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/fqkhbzDLIcPpXhr2KEsyfXozaWsquKlxJeru1Qno.png" alt="صبح اعدام">
+    <div class="card-content">
+        <h3>صبح اعدام</h3>
+        <p>کارگردان: بهروز افخمی</p>
+        <p>تعداد بلیت: 2,888</p>
+        <p>سالن‌: 79</p>
+        <p>سانس: 359</p>
+        <p>شروع اکران: 1404/02/31</p>
+        <p>فروش: 1,878,778,000 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/PZlYAI0oKqMFSNqxFNixNhcHj4ujMgNVy3g69wJ0.jpg" alt="زعفرانیه 14 تیر">
+    <div class="card-content">
+        <h3>زعفرانیه 14 تیر</h3>
+        <p>کارگردان: سیدعلی هاشمی</p>
+        <p>تعداد بلیت: 1,455</p>
+        <p>سالن‌: 72</p>
+        <p>سانس: 168</p>
+        <p>شروع اکران: 1404/04/18</p>
+        <p>فروش: 1,472,940,051 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/H3AeH0d3uMEAWWKjaZIcwGyys6HqCVDb4UmEh7CY.jpg" alt="وحشی">
+    <div class="card-content">
+        <h3>وحشی</h3>
+        <p>کارگردان: شراره سروش</p>
+        <p>تعداد بلیت: 1,319</p>
+        <p>سالن‌: 62</p>
+        <p>سانس: 272</p>
+        <p>شروع اکران: 1404/03/16</p>
+        <p>فروش: 1,060,510,000 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/npImfg4ZvM58f9hJlID1o6FbAyvZBhB0X6IJo43J.jpg" alt="پاکول">
+    <div class="card-content">
+        <h3>پاکول</h3>
+        <p>کارگردان: نوید اسماعیلی</p>
+        <p>تعداد بلیت: 994</p>
+        <p>سالن‌: 48</p>
+        <p>سانس: 158</p>
+        <p>شروع اکران: 1404/02/31</p>
+        <p>فروش: 870,210,000 ریال</p>
+    </div>
+</div>
+
+<div class="card">
+    <img src="https://static.samfaa.ir/storage/show/show_image/vRNaEuxHNGaT91j57Vd1Ww1ZKFwhPnlIbEGY5cd8.png" alt="تنگه">
+    <div class="card-content">
+        <h3>تنگه</h3>
+        <p>کارگردان:</p>
+        <p>تعداد بلیت: 24</p>
+        <p>سالن‌: 1</p>
+        <p>سانس: 1</p>
+        <p>شروع اکران: 1404/03/12</p>
+        <p>فروش: 13,200,000 ریال</p>
+    </div>
+</div>
 
     </div>
 </body>
