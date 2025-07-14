@@ -10,15 +10,17 @@ URL = "https://iranopen.sbs/api/v1/recent_shows?recently=all&province_id=&screen
 response = requests.get(URL)
 data = response.json()
 
-# ذخیره JSON برای دیباگ
+# ذخیره JSON برای بررسی بیشتر
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
 print("✅ اطلاعات دریافتی از API:")
 print(json.dumps(data, indent=2, ensure_ascii=False))
 
-# تولید HTML
+# ساخت پوشه public در صورت نیاز
 os.makedirs("public", exist_ok=True)
+
+# ساخت فایل HTML
 with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
     f.write("""
 <!DOCTYPE html>
@@ -27,11 +29,13 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
     <meta charset="UTF-8">
     <title>فیلم‌های در حال اکران</title>
     <style>
-        body { font-family: sans-serif; background: #f2f2f2; text-align: center; }
+        body { font-family: sans-serif; background: #f2f2f2; text-align: center; direction: rtl; }
         h1 { color: #222; }
         .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px; padding: 20px; }
-        .card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); direction: rtl; }
+        .card { background: white; border-radius: 10px; padding: 10px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
         .card img { width: 100%; height: 200px; object-fit: cover; border-radius: 8px; }
+        .card h3 { margin: 10px 0 5px; font-size: 18px; }
+        .card p { margin: 4px 0; font-size: 15px; color: #444; }
     </style>
 </head>
 <body>
@@ -40,12 +44,13 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
 """)
 
     for item in data.get("data", []):
-        title = item.get("title", "بدون عنوان")
-        director = item.get("director", "")
-        poster = item.get("poster_url") or ""
-        tickets = item.get("ticket_count") or "؟"
-        halls = item.get("hall_count") or "؟"
-        screenings = item.get("screening_count") or "؟"
+        movie = item.get("movie", {})
+        title = movie.get("title", "بدون عنوان")
+        director = movie.get("director", "نامشخص")
+        poster = movie.get("poster_url", "")
+        tickets = item.get("ticket_count", "؟")
+        halls = item.get("hall_count", "؟")
+        screenings = item.get("screening_count", "؟")
 
         f.write(f"""
         <div class="card">
