@@ -1,15 +1,19 @@
 import requests
+from datetime import datetime
 import os
 
-try:
-    # فراخوانی API سمفا
-    url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
-    response = requests.get(url, timeout=10)
-    response.raise_for_status()  # بررسی خطاهای HTTP
-    data = response.json()
-    movies = data.get("data", [])
+URL = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
 
-    html_content = """
+try:
+    response = requests.get(URL)
+    data = response.json()
+except Exception as e:
+    print("Error fetching or decoding JSON:", e)
+    exit(1)
+
+movies = data.get("data", [])
+
+html = """
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
@@ -68,32 +72,38 @@ try:
     <div class="container">
 """
 
-    for movie in movies:
-        html_content += f"""
+for movie in movies:
+    title = movie.get("fa_name", "بدون عنوان")
+    director = movie.get("director", "نامشخص")
+    ticket_count = movie.get("ticket_count", "۰")
+    cinema_count = movie.get("cinema_count", "۰")
+    showtime_count = movie.get("session_count", "۰")
+    poster_url = movie.get("poster_url") or "https://via.placeholder.com/350x500?text=No+Image"
+
+    html += f"""
         <div class="card">
-            <img src="{movie.get("poster")}" class="poster" alt="{movie.get("fa_name")}">
+            <img src="{poster_url}" alt="{title}" class="poster" />
             <div class="content">
-                <div class="title">{movie.get("fa_name")}</div>
-                <div class="info">کارگردان: {movie.get("director", "ندارد")}</div>
-                <div class="info">تعداد بلیت: {movie.get("ticket_count", "۰")}</div>
-                <div class="info">تعداد سالن: {movie.get("cinema_count", "۰")}</div>
-                <div class="info">تعداد سانس: {movie.get("screening_count", "۰")}</div>
+                <div class="title">{title}</div>
+                <div class="info">کارگردان: {director}</div>
+                <div class="info">تعداد سالن: {cinema_count}</div>
+                <div class="info">تعداد سانس: {showtime_count}</div>
+                <div class="info">تعداد بلیت: {ticket_count}</div>
             </div>
         </div>
-        """
+    """
 
-    html_content += """
+html += """
     </div>
 </body>
 </html>
 """
 
-    os.makedirs("public", exist_ok=True)
+# ساخت پوشه public در صورت عدم وجود
+os.makedirs("public", exist_ok=True)
 
-    with open("public/now_showing.html", "w", encoding="utf-8") as f:
-        f.write(html_content)
+# ذخیره فایل در مسیر public/now_showing.html
+with open("public/now_showing.html", "w", encoding="utf-8") as f:
+    f.write(html)
 
-    print("✅ فایل HTML با موفقیت ایجاد شد.")
-
-except Exception as e:
-    print("❌ خطا در اجرای scraper.py:", str(e))
+print("✅ فایل now_showing.html با موفقیت ساخته شد.")
