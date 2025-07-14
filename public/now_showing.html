@@ -6,74 +6,324 @@
   <style>
     body {
       font-family: sans-serif;
-      background: #f5f5f5;
+      background: #f4f4f4;
       padding: 20px;
-      direction: rtl;
     }
-
-    h2 {
+    h1 {
       text-align: center;
-      color: #222;
+      color: #333;
     }
-
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
       gap: 20px;
       margin-top: 30px;
     }
-
-    .movie-card {
-      background: #fff;
+    .card {
+      background: white;
       border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      transition: transform 0.2s ease;
     }
-
-    .movie-card:hover {
-      transform: scale(1.02);
-    }
-
-    .movie-card img {
+    .card img {
       width: 100%;
-      height: 340px;
+      height: 350px;
       object-fit: cover;
     }
-
-    .movie-details {
+    .card-content {
       padding: 15px;
     }
-
-    .movie-details h3 {
-      font-size: 18px;
+    .card-content h3 {
       margin: 0 0 10px;
-      color: #333;
+      font-size: 18px;
+      color: #014874;
     }
-
-    .movie-details p {
+    .card-content p {
+      margin: 5px 0;
       font-size: 14px;
       color: #555;
-      margin: 5px 0;
     }
   </style>
 </head>
 <body>
-  <h2>فیلم‌های در حال اکران</h2>
+  <h1>فیلم‌های در حال اکران</h1>
   <div class="grid">
-    <!-- نمونه ساختار هر فیلم؛ این بلوک‌ها به‌صورت داینامیک با پایتون پر می‌شوند -->
-    <div class="movie-card">
-      <img src="https://example.com/poster.jpg" alt="نام فیلم">
-      <div class="movie-details">
-        <h3>نام فیلم</h3>
-        <p>کارگردان: کارگردان نمونه</p>
-        <p>توضیحات کوتاه فیلم یا خلاصه داستان</p>
-        <p>تعداد سانس: ۵۰</p>
-        <p>تعداد سالن: ۱۰</p>
-        <p>تعداد بلیت: ۲۰۰۰</p>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
       </div>
     </div>
-    <!-- تکرار برای هر فیلم -->
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="" alt="فیلم">
+      <div class="card-content">
+        <h3>عنوان نامشخص</h3>
+        <p><strong>کارگردان:</strong> نامشخص</p>
+        <p><strong>تعداد بلیت:</strong> 0</p>
+        <p><strong>تعداد سالن:</strong> 0</p>
+        <p><strong>تعداد سانس:</strong> 0</p>
+      </div>
+    </div>
+
   </div>
 </body>
 </html>
