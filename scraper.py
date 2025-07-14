@@ -1,7 +1,6 @@
 import requests
 import json
 import os
-from datetime import datetime
 
 OUTPUT_HTML = "public/now_showing.html"
 OUTPUT_JSON = "output.json"
@@ -10,7 +9,7 @@ URL = "https://iranopen.sbs/api/v1/recent_shows?recently=all&province_id=&screen
 response = requests.get(URL)
 data = response.json()
 
-# ذخیره JSON برای بررسی بیشتر
+# ذخیره JSON برای بررسی
 with open(OUTPUT_JSON, "w", encoding="utf-8") as f:
     json.dump(data, f, ensure_ascii=False, indent=2)
 
@@ -48,6 +47,7 @@ with open(OUTPUT_HTML, "w", encoding="utf-8") as f:
         title = movie.get("title", "بدون عنوان")
         director = movie.get("director", "نامشخص")
         poster = movie.get("poster_url", "")
+
         tickets = item.get("ticket_count", "؟")
         halls = item.get("hall_count", "؟")
         screenings = item.get("screening_count", "؟")
