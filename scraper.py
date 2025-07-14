@@ -23,7 +23,6 @@ def generate_html(movies):
       font-family: sans-serif;
       background: #f4f4f4;
       padding: 20px;
-      direction: rtl;
     }
     h1 {
       text-align: center;
@@ -40,8 +39,6 @@ def generate_html(movies):
       border-radius: 10px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
-      display: flex;
-      flex-direction: column;
     }
     .card img {
       width: 100%;
@@ -69,12 +66,13 @@ def generate_html(movies):
 """
 
     for movie in movies:
+        info = movie.get("movie", {})
         html += f"""
     <div class="card">
-      <img src="{movie.get("photo", "")}" alt="{movie.get("movie_title", "")}">
+      <img src="{info.get("photo", "")}" alt="{info.get("title", "فیلم")}">
       <div class="card-content">
-        <h3>{movie.get("movie_title", "عنوان نامشخص")}</h3>
-        <p><strong>کارگردان:</strong> {movie.get("director", "نامشخص")}</p>
+        <h3>{info.get("title", "عنوان نامشخص")}</h3>
+        <p><strong>کارگردان:</strong> {info.get("director", "نامشخص")}</p>
         <p><strong>تعداد بلیت:</strong> {movie.get("total_tickets", 0)}</p>
         <p><strong>تعداد سالن:</strong> {movie.get("total_cinemas", 0)}</p>
         <p><strong>تعداد سانس:</strong> {movie.get("total_shows", 0)}</p>
@@ -85,8 +83,7 @@ def generate_html(movies):
     html += """
   </div>
 </body>
-</html>
-"""
+</html>"""
 
     os.makedirs("public", exist_ok=True)
     with open("public/now_showing.html", "w", encoding="utf-8") as f:
