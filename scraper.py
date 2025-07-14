@@ -1,14 +1,16 @@
 import requests
 import os
 
-def fetch_movies():
+try:
+    # فراخوانی API سمفا
     url = "https://api.samfaa.ir/admin/report/recent_shows?recently=all&province_id=&screening_id=1404&from=&to="
-    response = requests.get(url)
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()  # بررسی خطاهای HTTP
     data = response.json()
-    return data.get("data", [])
+    movies = data.get("data", [])
 
-def generate_html(movies):
-    html = """<!DOCTYPE html>
+    html_content = """
+<!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -67,28 +69,31 @@ def generate_html(movies):
 """
 
     for movie in movies:
-        html += f"""
+        html_content += f"""
         <div class="card">
-            <img class="poster" src="{movie.get('poster') or ''}" alt="{movie.get('movie_name', 'بدون عنوان')}">
+            <img src="{movie.get("poster")}" class="poster" alt="{movie.get("fa_name")}">
             <div class="content">
-                <div class="title">{movie.get('movie_name', '')}</div>
-                <div class="info">کارگردان: {movie.get('director', '')}</div>
-                <div class="info">تعداد سانس: {movie.get('total_screen', '')}</div>
-                <div class="info">تعداد سالن: {movie.get('total_cinema', '')}</div>
-                <div class="info">تعداد بلیت: {movie.get('ticket_count', '')}</div>
+                <div class="title">{movie.get("fa_name")}</div>
+                <div class="info">کارگردان: {movie.get("director", "ندارد")}</div>
+                <div class="info">تعداد بلیت: {movie.get("ticket_count", "۰")}</div>
+                <div class="info">تعداد سالن: {movie.get("cinema_count", "۰")}</div>
+                <div class="info">تعداد سانس: {movie.get("screening_count", "۰")}</div>
             </div>
         </div>
         """
 
-    html += """
+    html_content += """
     </div>
 </body>
 </html>
 """
-    os.makedirs("public", exist_ok=True)
-    with open("public/now_showing.html", "w", encoding="utf-8") as f:
-        f.write(html)
 
-if __name__ == "__main__":
-    movies = fetch_movies()
-    generate_html(movies)
+    os.makedirs("public", exist_ok=True)
+
+    with open("public/now_showing.html", "w", encoding="utf-8") as f:
+        f.write(html_content)
+
+    print("✅ فایل HTML با موفقیت ایجاد شد.")
+
+except Exception as e:
+    print("❌ خطا در اجرای scraper.py:", str(e))
